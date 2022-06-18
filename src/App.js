@@ -20,21 +20,33 @@ function App() {
 
   const handleUpdate = async (book, newShelf) => {
     BooksAPI.update(book, newShelf);
-    const res = await BooksAPI.getAll();
-    setBooks(res);
+    if (newShelf === 'none') {
+      setBooks((prevState) => prevState.filter((b) => b.id !== book.id));
+    } else {
+      book.shelf = newShelf;
+      setBooks((prevState) =>
+        prevState.filter((b) => b.id !== book.id).concat(book)
+      );
+    }
   };
 
   const handleSearch = async (query, maxResult) => {
     if (query.length) {
       BooksAPI.search(query.trim(), maxResult).then((result) => {
         if (result !== undefined && result.error !== 'empty query') {
-          setSearchBooks(result);
-        } else {
-          setSearchBooks([]);
+          const updatedBooks = result.map((book) => {
+            books.map((b) => {
+              if (b.id === book.id) {
+                book.shelf = b.shelf;
+              }
+              return b;
+            });
+            return book;
+          });
+          setSearchBooks(updatedBooks);
         }
       });
     } else {
-      console.log('empty query');
       setSearchBooks([]);
     }
   };

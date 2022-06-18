@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function BookShelf({ books, query, shelfTitle, handleUpdate }) {
   const shelfBooks = query
     ? books.filter((book) => book.shelf === query)
     : books;
-
-  const [options, setOptions] = useState([
-    { name: 'Move to...', value: null },
-    { name: 'Currently Reading', value: 'currentlyReading' },
-    { name: 'Want to Read', value: 'wantToRead' },
-    { name: 'Read', value: 'read' },
-    { name: 'None', value: 'none' },
-  ]);
 
   const booksElement = shelfBooks.map((book) => (
     <li key={book.id}>
@@ -27,15 +19,16 @@ function BookShelf({ books, query, shelfTitle, handleUpdate }) {
           ></div>
           <div className="book-shelf-changer">
             <select
-              id="shelf"
-              defaultValue={book.shelf}
               onChange={(e) => handleUpdate(book, e.target.value)}
+              defaultValue={book.shelf ? book.shelf : 'none'}
             >
-              {options.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.name}
-                </option>
-              ))}
+              <option value="none" disabled>
+                Move to...
+              </option>
+              <option value="currentlyReading">Currently Reading</option>
+              <option value="wantToRead">Want to Read</option>
+              <option value="read">Read</option>
+              <option value="none">None</option>
             </select>
           </div>
         </div>
