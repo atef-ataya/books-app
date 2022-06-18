@@ -25,13 +25,18 @@ function App() {
   };
 
   const handleSearch = async (query, maxResult) => {
-    BooksAPI.search(query.trim(), maxResult).then((result) => {
-      if (result !== undefined && result.error !== 'empty query') {
-        setSearchBooks(result);
-      } else {
-        setSearchBooks([]);
-      }
-    });
+    if (query.length) {
+      BooksAPI.search(query.trim(), maxResult).then((result) => {
+        if (result !== undefined && result.error !== 'empty query') {
+          setSearchBooks(result);
+        } else {
+          setSearchBooks([]);
+        }
+      });
+    } else {
+      console.log('empty query');
+      setSearchBooks([]);
+    }
   };
 
   return (
